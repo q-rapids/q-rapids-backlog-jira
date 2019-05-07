@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import com.bittium.qrapids.issuetracker.exceptions.UndefinedException;
 
 @Service
 public class Jira implements IssueTracker<JiraRestClient> {
@@ -58,8 +59,17 @@ public class Jira implements IssueTracker<JiraRestClient> {
                 project = p;
             }
         }
-        if (project == null) {
-            // TODO: RytiVei: Throw exception and handle it
+        try {
+	        if (project == null) {
+	            // TODO: RytiVei: Throw exception and handle it - Done, perhaps some additional modification needed?
+	        	throw new UndefinedException(String.format("Project '%s' does not exist.", projectname));
+	        }
+	        else {
+	        	System.out.println("Creating a new JIRA issue with project: "+projectname);
+	        }
+        }
+        catch(Exception e) {
+        	System.out.println("Exception was caught.");
         }
 
         IssueType issueType = null;
@@ -68,8 +78,16 @@ public class Jira implements IssueTracker<JiraRestClient> {
                 issueType = t;
             }
         }
-        if (issueType == null) {
-            // TODO: RytiVei: Throw exception and handle it
+        try {
+	        if (issueType == null) {
+	        	throw new UndefinedException(String.format("Issue type '%s' does not exist.", type));
+	        }
+	        else{
+	        	System.out.println("Creating a new JIRA issue with issue type: "+type);
+	        }
+        }
+        catch (Exception e){
+        	System.out.println("Exception was caught.");
         }
 
         ComponentInput componentInput = new ComponentInput(this.jiraProjectComponentName,
